@@ -1,0 +1,75 @@
+[gd_scene load_steps=10 format=3 uid="uid://bxe5mrkpnkirw"]
+
+[ext_resource type="PackedScene" uid="uid://cohb8et7ekgcb" path="res://Assets/platform.tscn" id="1_33n4h"]
+[ext_resource type="Script" uid="uid://ck231p4rb1d66" path="res://scripts/game.gd" id="1_j5byn"]
+[ext_resource type="PackedScene" uid="uid://cfmoqxpbs5oic" path="res://Assets/player.tscn" id="2_xnw57"]
+[ext_resource type="PackedScene" uid="uid://dibtc3183l1dc" path="res://Assets/moving_platform.tscn" id="4_j5byn"]
+[ext_resource type="PackedScene" uid="uid://bwyoo6mw17jnp" path="res://Assets/long_platform.tscn" id="5_dk53w"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xnw57"]
+sky_top_color = Color(0, 0.835434, 0.843491, 1)
+sky_horizon_color = Color(0.891807, 1.1146, 1.29163, 1)
+ground_bottom_color = Color(0, 0.514252, 0.547699, 1)
+ground_horizon_color = Color(0.630295, 0.88031, 1, 1)
+ground_curve = 0.400853
+
+[sub_resource type="Sky" id="Sky_ws0jp"]
+sky_material = SubResource("ProceduralSkyMaterial_xnw57")
+
+[sub_resource type="Environment" id="Environment_j5byn"]
+background_mode = 2
+sky = SubResource("Sky_ws0jp")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dk53w"]
+size = Vector3(100, 1, 100)
+
+[node name="Game" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.590353, 0, -2.5527163)
+script = ExtResource("1_j5byn")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 8.26385, -5.87747)
+light_color = Color(1, 0.721237, 0.536575, 1)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_j5byn")
+
+[node name="Platform" parent="." instance=ExtResource("1_33n4h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8615808, -8.66884)
+
+[node name="Platform3" parent="." instance=ExtResource("1_33n4h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7854962, -5.8329306)
+
+[node name="Platform4" parent="." instance=ExtResource("1_33n4h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6872, 5.27464)
+
+[node name="Player" parent="." instance=ExtResource("2_xnw57")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 3.0308175, 5.5810623)
+
+[node name="Pivot" type="Marker3D" parent="Player"]
+transform = Transform3D(121.290146, 17.768694, -14.647402, 0, 78.5282, 95.262184, 23.027649, -93.59038, 77.150055, 0.4780171, 9.762896, 13.131289)
+
+[node name="Camera3D" type="Camera3D" parent="Player/Pivot"]
+transform = Transform3D(0.027000006, -8.2502705e-10, 1.8794266e-09, -1.6305132e-09, 0.027000017, 1.6186252e-10, 6.8994555e-10, -1.4205672e-09, 0.027000017, 4.656613e-10, 0.061805826, 0.07497636)
+
+[node name="MovingPlatform" parent="." instance=ExtResource("4_j5byn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13.689578)
+
+[node name="AnimationPlayer" parent="MovingPlatform/MovingPlatform" index="2"]
+autoplay = ""
+
+[node name="Platform2" parent="." instance=ExtResource("5_dk53w")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="FallSensor" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FallSensor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.7605414, 0)
+shape = SubResource("BoxShape3D_dk53w")
+
+[connection signal="body_entered" from="FallSensor" to="." method="_on_body_entered"]
+
+[editable path="MovingPlatform"]
